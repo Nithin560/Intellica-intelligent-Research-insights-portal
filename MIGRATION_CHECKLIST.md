@@ -14,7 +14,7 @@
 | Faculty - RnD | ⏳ Pending | 1h | Medium |
 | HOD - Sections | ⏳ Pending | 2h | Medium |
 | Profile Pages | ⏳ Pending | 1h | Low |
-| Login/Register | ⏳ Pending | 30m | Low |
+| Login/Register | ⏳ Pending | 40m | Low |
 
 **Total Estimated Effort:** ~15 hours
 
