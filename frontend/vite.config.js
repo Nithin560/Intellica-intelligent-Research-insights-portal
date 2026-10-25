@@ -13,6 +13,16 @@ export default defineConfig({
         drop_console: true,
       },
     },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-charts': ['chart.js', 'react-chartjs-2'],
+          'vendor-excel': ['xlsx'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
   },
   server: {
     port: 5173,
