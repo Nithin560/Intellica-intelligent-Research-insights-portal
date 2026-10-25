@@ -294,7 +294,11 @@ borderRadius:4
 {selectedRow.filePath && (
 
 <a
-href={`http://localhost:5000/${selectedRow.filePath}`}
+href={
+  selectedRow.filePath.startsWith("http")
+    ? selectedRow.filePath
+    : `${(import.meta.env.VITE_BACKEND_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '')).replace(/\/$/, '')}/${selectedRow.filePath.replace(/^\//, '')}`
+}
 target="_blank"
 rel="noreferrer"
 style={pdfBtn}

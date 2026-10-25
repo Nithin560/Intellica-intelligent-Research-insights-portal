@@ -30,6 +30,7 @@ import MOUs from "../faculty/categories/MOUs";
 
 import HodHeader from "./HodHeader";
 import API_BASE from "../../api";
+import { mockUploads } from "../../data/mockUploads";
 
 /* ================= PROFILE INFO ================= */
 
@@ -110,11 +111,25 @@ const extraMenuItems = readOnly
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      const data = await res.json();
-      setUser(data);
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+      } else {
+        throw new Error("HOD profile fetch failed");
+      }
 
     } catch (err) {
-      console.error(err);
+      console.warn("Using showcase fallback HOD profile:", err);
+      setUser(prev => prev || {
+        name: localStorage.getItem("user_name") || "Dr. K. Srinivas",
+        department: localStorage.getItem("user_department") || "Computer Science and Engineering",
+        designation: localStorage.getItem("user_designation") || "Professor & Head of Department",
+        email: "hod.cse@intellica.edu",
+        googleScholar: "https://scholar.google.com",
+        scopusId: "https://scopus.com",
+        vidwanId: "https://vidwan.inflibnet.ac.in",
+        credits: 92
+      });
     }
 
   };
@@ -183,12 +198,16 @@ useEffect(() => {
         }
       );
 
-      const data = await res.json();
-
-      if (res.ok) setUploads(data);
+      if (res.ok) {
+        const data = await res.json();
+        setUploads(Array.isArray(data) && data.length > 0 ? data : mockUploads);
+      } else {
+        setUploads(mockUploads);
+      }
 
     } catch (err) {
-      console.error(err);
+      console.warn("Using showcase uploads for HOD:", err);
+      setUploads(mockUploads);
     }
 
     setLoading(false);

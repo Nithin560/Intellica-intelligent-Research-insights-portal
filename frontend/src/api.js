@@ -1,14 +1,19 @@
 // Determine API endpoint based on environment
+const configuredApiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
+
 let API_BASE;
 
-// In production (Docker): use relative path to talk to same server
-// In development: use localhost:PORT
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+if (configuredApiUrl) {
+  API_BASE = configuredApiUrl.replace(/\/$/, "");
+  if (!API_BASE.endsWith("/api")) {
+    API_BASE = `${API_BASE}/api`;
+  }
+} else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   // Development mode - use VITE_BACKEND_PORT
   const BACKEND_PORT = import.meta.env.VITE_BACKEND_PORT || 5000;
   API_BASE = `http://localhost:${BACKEND_PORT}/api`;
 } else {
-  // Production mode - use same-origin requests (Coolify domain)
+  // Production mode - use same-origin requests (Coolify domain or serverless rewrite)
   API_BASE = '/api';
 }
 

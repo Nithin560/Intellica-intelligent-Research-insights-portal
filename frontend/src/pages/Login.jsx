@@ -114,6 +114,50 @@ function Login({ setPage, setUserRole }) {
     }
   };
 
+  const handleDemoLogin = (role) => {
+    const demoProfiles = {
+      FACULTY: {
+        id: "demo-faculty-01",
+        token: "demo-token-faculty",
+        role: "FACULTY",
+        name: "Dr. Rajesh Kumar",
+        department: "Computer Science and Engineering",
+        designation: "Associate Professor",
+        page: "faculty"
+      },
+      HOD: {
+        id: "demo-hod-01",
+        token: "demo-token-hod",
+        role: "HOD",
+        name: "Dr. K. Srinivas",
+        department: "Computer Science and Engineering",
+        designation: "Professor & Head of Department",
+        page: "hod"
+      },
+      ADMIN: {
+        id: "demo-admin-01",
+        token: "demo-token-admin",
+        role: "ADMIN",
+        name: "Principal & Administrator",
+        department: "Administration",
+        designation: "Chief Administrator",
+        page: "admin-dashboard"
+      }
+    };
+
+    const user = demoProfiles[role];
+    localStorage.setItem("token", user.token);
+    localStorage.setItem("user_role", user.role);
+    localStorage.setItem("user_name", user.name);
+    localStorage.setItem("user_department", user.department);
+    localStorage.setItem("user_designation", user.designation);
+    localStorage.setItem("userId", user.id);
+    if (setUserRole) {
+      setUserRole(user.role);
+    }
+    setPage(user.page);
+  };
+
   return (
     <>
       {/* ===== Background ===== */}
@@ -237,6 +281,116 @@ function Login({ setPage, setUserRole }) {
               </button>
             </div>
           )}
+
+          {/* ===== Quick Showcase Demo Access ===== */}
+          <div
+            style={{
+              marginTop: "24px",
+              paddingTop: "16px",
+              borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                color: "rgba(255, 255, 255, 0.9)",
+                fontSize: "12px",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                marginBottom: "12px",
+              }}
+            >
+              ✨ Live Showcase Demo Access
+            </p>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => handleDemoLogin("FACULTY")}
+                style={{
+                  background: "rgba(255, 255, 255, 0.2)",
+                  border: "1px solid rgba(255, 255, 255, 0.4)",
+                  color: "#fff",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  backdropFilter: "blur(6px)",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.35)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                👨‍🏫 Faculty
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin("HOD")}
+                style={{
+                  background: "rgba(255, 255, 255, 0.2)",
+                  border: "1px solid rgba(255, 255, 255, 0.4)",
+                  color: "#fff",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  backdropFilter: "blur(6px)",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.35)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                🏢 HOD
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin("ADMIN")}
+                style={{
+                  background: "rgba(255, 255, 255, 0.2)",
+                  border: "1px solid rgba(255, 255, 255, 0.4)",
+                  color: "#fff",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  backdropFilter: "blur(6px)",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.35)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                👑 Admin
+              </button>
+            </div>
+          </div>
 
         </form>
       </div>

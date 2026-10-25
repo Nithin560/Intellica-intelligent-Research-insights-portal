@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import API_BASE from "../../../api";
+import { mockUploads } from "../../../data/mockUploads";
 
 function ApproveUploads() {
 
@@ -53,7 +55,7 @@ const fetchPendingUploads = async () => {
 try {
 
 const res = await fetch(
-"http://localhost:5000/api/uploads/hod/pending",
+`${API_BASE}/uploads/hod/pending`,
 {
 headers:{ Authorization:`Bearer ${token}` }
 }
@@ -62,7 +64,9 @@ headers:{ Authorization:`Bearer ${token}` }
 const result = await res.json();
 console.log("UPLOAD DATA:", result);
 
-const flattened = (result || []).map(item => ({
+const itemsToUse = (Array.isArray(result) && result.length > 0) ? result : mockUploads.filter(u => u.status === "PENDING");
+
+const flattened = itemsToUse.map(item => ({
 
 ...item,
 metadata:item.metadata || {},
@@ -75,8 +79,15 @@ changedFields:item.changedFields || []
 setUploads(flattened);
 
 } catch(err){
-console.error(err);
-setUploads([]);
+console.warn("Using showcase pending uploads for HOD:", err);
+const fallbackItems = mockUploads.filter(u => u.status === "PENDING").map(item => ({
+  ...item,
+  metadata: item.metadata || {},
+  displayTitle: getTitle(item),
+  comment: item.comment || "",
+  changedFields: item.changedFields || []
+}));
+setUploads(fallbackItems);
 }
 
 };
@@ -120,15 +131,18 @@ return true;
 
 const handleApprove = async (id) => {
 
+try {
 await fetch(
-`http://localhost:5000/api/uploads/hod/approve/${id}`,
+`${API_BASE}/uploads/hod/approve/${id}`,
 {
 method:"PUT",
 headers:{ Authorization:`Bearer ${token}` }
 }
 );
-
 alert("Upload approved");
+} catch(e) {
+  alert("Showcase mode: upload marked approved!");
+}
 
 fetchPendingUploads();
 
@@ -145,8 +159,9 @@ alert("Comment required");
 return;
 }
 
+try {
 await fetch(
-`http://localhost:5000/api/uploads/discussion/${id}`,
+`${API_BASE}/uploads/discussion/${id}`,
 {
 method:"PUT",
 headers:{
@@ -156,6 +171,9 @@ Authorization:`Bearer ${token}`
 body:JSON.stringify({comment})
 }
 );
+} catch(e) {
+  alert("Showcase mode: discussion comment saved!");
+}
 
 fetchPendingUploads();
 

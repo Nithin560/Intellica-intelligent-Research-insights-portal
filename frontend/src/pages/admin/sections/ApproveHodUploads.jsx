@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-
-const API_BASE = "/api";   // ✅ central API base
+import API_BASE from "../../../api";
+import { mockUploads } from "../../../data/mockUploads";
 
 function ApproveHodUploads() {
 
@@ -40,12 +40,15 @@ const fetchUploads = async () => {
 
     const data = await res.json();
 
-    if(res.ok){
+    if(res.ok && Array.isArray(data) && data.length > 0){
       setUploads(data);
+    } else {
+      setUploads(mockUploads.filter(u => u.status === "PENDING"));
     }
 
   }catch(err){
-    console.error(err);
+    console.warn("Using showcase pending uploads for Admin approval:", err);
+    setUploads(mockUploads.filter(u => u.status === "PENDING"));
   }
 };
 

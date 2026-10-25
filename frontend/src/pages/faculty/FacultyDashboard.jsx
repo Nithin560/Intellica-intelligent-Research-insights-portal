@@ -30,6 +30,7 @@ import Consultancy from "./categories/Consultancy";
 import ProfileInfo from "../common/ProfileInfo";
 import API_BASE from "../../api";
 import CreditConfigViewer from "../admin/sections/credit-config/common/CreditConfigViewer";
+import { mockUploads } from "../../data/mockUploads";
 
 function FacultyDashboard({ setPage, readOnly = false, facultyId = null })  {
 const responsive = useResponsive();
@@ -73,7 +74,6 @@ const handleLogout = () => {
 
 /* FETCH PROFILE */
 
-
 useEffect(()=>{
 
 const url = facultyId
@@ -83,9 +83,23 @@ const url = facultyId
 fetch(url,{
 headers:{Authorization:`Bearer ${token}`}
 })
-.then(res=>res.json())
+.then(res => {
+  if (!res.ok) throw new Error("Profile error");
+  return res.json();
+})
 .then(data=>setUser(data))
-.catch(console.error);
+.catch(() => {
+  setUser(prev => prev || {
+    name: localStorage.getItem("user_name") || "Dr. Rajesh Kumar",
+    department: localStorage.getItem("user_department") || "Computer Science and Engineering",
+    designation: localStorage.getItem("user_designation") || "Associate Professor",
+    email: "rajesh.cse@intellica.edu",
+    googleScholar: "https://scholar.google.com",
+    scopusId: "https://scopus.com",
+    vidwanId: "https://vidwan.inflibnet.ac.in",
+    credits: 65
+  });
+});
 
 },[token, facultyId]);
 
@@ -131,23 +145,23 @@ headers:{Authorization:`Bearer ${token}`}
 .then(async res => {
 
 if(!res.ok){
-console.error("Upload fetch failed",res.status);
-setUploads([]);
+console.warn("Upload fetch failed, using showcase mock data");
+setUploads(mockUploads);
 return;
 }
 
-const data = await res.json();   // ✅ THIS LINE IS MISSING IN YOUR CODE
+const data = await res.json();
 
-if(Array.isArray(data)){
+if(Array.isArray(data) && data.length > 0){
 setUploads(data);
 }else{
-setUploads([]);
+setUploads(mockUploads);
 }
 
 })
 .catch(err=>{
-console.error("UPLOAD FETCH ERROR",err);
-setUploads([]);
+console.warn("UPLOAD FETCH ERROR, using showcase mock data", err);
+setUploads(mockUploads);
 });
 
 },[token, facultyId]);
